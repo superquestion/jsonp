@@ -1,87 +1,63 @@
-window.onload = function() {
-                function param(obj) {
-                    var pairs = [];
-                    for(var name in obj) {
-                        var pair = encodeURIComponent(name) + '=' + 
-                                   encodeURIComponent(obj[name]);
-                        pairs.push(pair.replace('/%20/g', '+'));
-                    }
-                    return pairs.join('&');
-                }
-                
-                function getScript(url, callback) {
-                    var script = document.createElement('script');
-                    script.type = 'text/javascript';
-                    script.src = url;
-                    
-                    // ¿çgÓ[Æ÷ÌÀí script ÏÂİdÍê³ÉááµÄÊÂ¼ş
-                    script.onload = script.onreadystatechange = function() {
-                        if (!this.readyState ||
-                            this.readyState === "loaded" || 
-                            this.readyState === "complete") {
-                            this.onload = this.onreadystatechange = null;
-                            document.getElementsByTagName('head')[0]
-                                    .removeChild(this);
-                            callback();
+function jsonp(option,callbackName){
+    //æ²¡æœ‰urlï¼Œå‡½æ•°ç»“æŸ
+    if(!option.url || !callbackName){
+        return false;
+    }
+    var data=option.data || {};
+    //è·å¾—ä¸€ä¸ªå”¯ä¸€çš„å­—ç¬¦ä¸²
+    var jsonp.jsc = new Date().getTime();
+    //å»ºç«‹æš‚æ—¶çš„å‡½æ•°å¼
+    data[callbackName]='XD'+jsonp.jsc++;
+    window[data[callbackName]]=function(json){
+        option.callback(json);
+    }
+    var url=option.url+'?'+param(data);
+    //è·å¾—script
+    getScript(url,function(){
+        //æ‰§è¡Œååˆ é™¤
+        window[data[callbackName]]=undefined;
+        try{
+            delete window[data[callbackName]];
+
+        }catch(e){};
+    })
+    //å†…éƒ¨å‡½æ•°
+    //æ ¼å¼åŒ–å‚æ•°
+    function param(obj) {
+        var pairs = [];
+        for(var name in obj) {
+             var pair = encodeURIComponent(name) + '=' +  encodeURIComponent(obj[name]);
+                 pairs.push(pair.replace('/%20/g', '+'));
+            }
+        return pairs.join('&');
+    }
+    function getScript(url, callback) {
+        var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = url;
+            script.onload = script.onreadystatechange = function() {
+                if (!this.readyState ||
+                    this.readyState === "loaded" || 
+                    this.readyState === "complete") {
+                    this.onload = this.onreadystatechange = null;
+                    document.getElementsByTagName('head')[0].removeChild(this);
+                        callback();
                         }
-                    };
-                    
-                    document.getElementsByTagName('head')[0]
-                            .appendChild(script);
-                }
-                
-                function jsonp(option,callbackName) {
-                    // ›]ÓĞurl»òËÅ·ş¶ËÒªÇóµÄcallbackName¾Í½YÊø
-                    if(!option.url || !callbackName) {
-                        return;
-                    }
-                    var data = option.data || {};
-                    
-                    // ½¨Á¢•º•rµÄº¯Ê½
-                    data[callbackName] = 'XD' + jsonp.jsc++;
-                   // 
-                   window[data[callbackName]] = function(json) {
-                    	//if(timeId){
-                    	//	clearTimeout(timeId);
-                    	//}
-                    	
-                    	//var flag=false;
-                    	//setTimeout(function(){
-                    		//if(!json){
-                    			//flag=true;
-                    		//}
-                    	//},5000)
-                    	//if(!flag){
-                    		//json.code='408';
-                    		//408 ÇëÇó³¬Ê±
-                    	//}
-                        option.callback(json);
-                    };
-                    var url = option.url + '?' + param(data);
-                    
-                    // È¡µÃ script ™n°¸
-                    getScript(url, function() {
-                         // script ÏÂİdKˆÌĞĞÍêááÒÆ³ı•º•rµÄº¯Ê½
-                         window[data[callbackName]] = undefined;
-                         try {
-                             delete window[data[callbackName]];
-                         }
-                         catch(e) {}
-                    });
-                }
-                jsonp.jsc = new Date().getTime();
-                
-                document.getElementById('test').onclick = function() {
-                	console.log('in')
-                    jsonp({
-                        url      : url
-                        data     : {
-                            id   : document.getElementById('id').value,
-                        },
-                        callback : function(person) {
-                            document.getElementById('result').innerHTML = 
-                                person.name + ',' + person.age;
-                        }
-                    }, 'jsoncallback');
-                };
             };
+        document.getElementsByTagName('head')[0].appendChild(script);
+     }
+
+}
+
+window.onload=function(){
+    jsonp({
+            url :'http://caterpillar.onlyfun.net/Gossip/' 
+             +'JavaScript/samples/JSONP-1.php',
+            data     : {
+                id   :1,
+                },
+            callback : function(data) {
+                console.log(data);
+            }
+        }, 'jsoncallback');
+}
