@@ -9,9 +9,10 @@ js对jsonp的封装
 jsonp 利用动态的在页面添加标签的方法，解决跨域。
 
 jsonp的执行步骤：
-1.动态的添加script 标签。
+1.动态的添加script 标签。如何test.php?callback=XD_111;
 2.向服务器请求数据。
-3.生成数据如callback_something({1,2,3,4});
-4.jsonp 通过widow[someting]=function(json){
+3.定义 var callbackName=XD_111;
+ widow[callbackName]=function(json){  //此处的callBackName要和请求中的callback值相等。
     callback(json);
 }
+4.如：服务器返回 XD_111({x:1,y:2})正好调用了window[callbackName]=function(json){callback(json)}这个函数
