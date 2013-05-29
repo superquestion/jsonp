@@ -1,3 +1,4 @@
+"use strict";
 function jsonp(option,callbackName){
     //没有url，函数结束
     if(!option.url || !callbackName){
@@ -5,9 +6,9 @@ function jsonp(option,callbackName){
     }
     var data=option.data || {};
     //获得一个唯一的字符串
-    var jsonp.jsc = new Date().getTime();
+    var jsc = new Date().getTime();
     //建立暂时的函数式
-    data[callbackName]='XD'+jsonp.jsc++;
+    data[callbackName]='XD'+jsc++;
     window[data[callbackName]]=function(json){
         option.callback(json);
     }
