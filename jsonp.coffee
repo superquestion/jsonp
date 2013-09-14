@@ -17,7 +17,7 @@ jsonp = (option,callbackName) ->
 				window[data[callbackName]] = null
 		getScript = (url,callback) ->
 			doc = document
-			script = doc.createElment("script")
+			script = doc.createElement("script")
 			script.src = url
 			script.onload = script.onreadystatechange = () ->
 				if !@readyState || @readyState == "loaded" || @readyState == "complete"
