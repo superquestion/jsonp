@@ -27,6 +27,7 @@
 			doc.getElementsByTagName('head')[0].appendChild(script);	
 		url = option.url + param(data)	
 		getScript(url,del)	
+		@
 		
 	_jsonp = (option,callbackName) ->
 		new jsonp(option,callbackName)
