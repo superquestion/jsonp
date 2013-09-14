@@ -1,4 +1,4 @@
-jsonp = (option,callbackName) ->
+	jsonp = (option,callbackName) ->
 		return false if !option.url || !callbackName
 		data = option.data || {}
 		jsc = new Date().getTime()
@@ -27,7 +27,10 @@ jsonp = (option,callbackName) ->
 			doc.getElementsByTagName('head')[0].appendChild(script);	
 		url = option.url + param(data)	
 		getScript(url,del)	
-		_jsonp = (option,callbackName) ->
-			new jsonp(option,callbackName)
+		
+	_jsonp = (option,callbackName) ->
+		new jsonp(option,callbackName)
 	Dance = Dance || {}
 	Dance._jsonp = jsonp
+                       
+	
