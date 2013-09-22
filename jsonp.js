@@ -16,11 +16,12 @@ function jsonp(option,callbackName){
     //获得script
     getScript(url,function(){
         //执行后删除
-        window[data[callbackName]]=undefined;
-        try{
+       try{
             delete window[data[callbackName]];
 
-        }catch(e){};
+        }catch(e){
+             window[data[callbackName]]=undefined;
+        };
     })
     //内部函数
     //格式化参数
