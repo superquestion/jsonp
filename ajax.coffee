@@ -1,4 +1,4 @@
-_serialize = (obj)-> 
+		_serialize = (obj)-> 
 			a = []
 			for k of obj 
 				 val = obj[k] 
