@@ -31,7 +31,7 @@
 		
 	_jsonp = (option,callbackName) ->
 		new jsonp(option,callbackName)
-	Dance = Dance || {}
+	Dance = Dance = {}
 	Dance._jsonp = jsonp
                        
 	
