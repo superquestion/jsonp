@@ -1,0 +1,337 @@
+JavaScript 中所有变量都是对象，除了两个例外 null 和 undefined。
+typeof null => object
+typeof undefined => undefined
+====================================================================
+对象
+1.如何创建对象  {} 可以创建对象
+ var foo={};//创建一个空对象
+2.访问属性
+var foo={name:"kobe"};
+foo.name;//kobe
+foo['name'] //kobe
+====================================================================
+3.删除属性
+var obj={bar:1}
+delete obj.bar;
+====================================================================
+闭包和引用
+
+闭包是 JavaScript 一个非常重要的特性，这意味着当前作用域总是能够访问外部作用域中的变量。 因为 函数 是 JavaScript 中唯一拥有自身作用域的结构，因此闭包的创建依赖于函数。
+
+=====================================================================
+/斐波那契数列
+var fibonacci = (function f(num){
+    return num <= 2 ? 1 : (f(num - 1) + f(num - 2));
+});
+var gn = fibonacci;
+fibonacci = null;
+console.info(gn(9);//34，使用命名函数表达式实现了函数对象和函数名的解耦，可以正常执行
+
+=====================================================================
+组合构造原型模式
+function Person(name, job){
+    this.name = name;
+    this.job = job;
+}
+Person.prototype.getName = fucntion(){
+    return this.name;    
+};
+var person = new Person('linjisong','it');
+1.使用构造函数模式创建属性，每个实例保存一份
+2.使用原型模式共享方法，所有实例共享保存一份
+3.这是目前使用最广泛的对象创建方式
+=======================================================================
+组合继承
+function Square(width,height){
+	if(this instanceof Square){
+		this.width=width;
+		this.height=height;	
+	}else{
+		return new Square(width,height);
+	}
+	
+}
+Square.prototype.getArea=function(){
+	return this.width*this.height;
+}
+function ColorSquare(width,height,color){
+	Square.call(this,width,height);//实现对父类的属性继承
+	this.color=color;
+}
+ColorSquare.prototype=new Square(); //使用原型链对父类的方法调用
+ColorSquare.prototype.getColor=function(){
+	return this.color;
+}
+
+构造函数仍然只是函数，只不过她是用new的方式调用
+当调用构造时候忘记了new 操作符，会导致this指向全局的
+对象
+=========================================================================
+js的严格模式
+'use strict'
+1.不能声明影藏的全局变量  //message='a';
+2.不能删除一个对象,只能删除对象的属性//var c='a';delete c;
+3.不能在eval中声明变量  //eval('var c=1'); alert(c)  //error  var s=eval('var c=1,a=0;c+a');alert(s) //1  success
+
+=========================================================================
+BOM
+窗口关系及框架
+
+top、window、parent、self：
+
+top：指向最高（最外）层的框架，也就是浏览器窗口。
+window：指向当前框架的顶层对象。
+parent：指向当前框架的直接上层框架，在没有子框架的情况下，parent、window、top和self都相等，在有子框架的情况下，parent有可能等于top，也有不能不相等。
+self：始终指向window，引入self的目的只是为了与top和parent对象对应起来。
+
+==============================================================================
+什么是设计模式？
+模式是一个通用问题的解决方案，为了提供一个更好的实践经验，有用的抽象化表示和解决一类问题的模版
+
+=====================================
+hasOwnProperty()函数过滤对象属性
+hasOwn=Object.prototype.hashOwnProperty
+for (i in man)
+hasOwn.call(man,i)
+
+
+============================
+16 进制转10
+obj.toString(16);
+
+
+===========================
+正则：//
+test 返回true or false
+match 返回匹配字符串，没找到就null
+search 返回匹配字符串位置，没找到就-1
+
+replace(reg,function(mathes){
+	
+
+}) 
+
+如：function format(str, data){
+        return str.replace(/\{\{\w+\}\}/gi, function(matchs){
+        	var returns = data[matchs.replace(/\$/g, "")];	
+            return (returns + "") == "undefined"? "": returns;
+        });
+    }
+
+i  执行对大小写不敏感
+g 执行全局
+m  执行多行匹配
+
+
+\w  字符
+\W  非字符
+\d  数字
+\D  非数字
+\s  空白
+\S  非空白
+[0-9] 0-9的数字
+[a-z]  a到z的小写字符
+
+贪婪量词：
+
+先看整个字符串是不是一个匹配。如果没有发现匹配，它去掉最后字符串中的最后一个字符，并再次尝试。如果还是没有发现匹配，那么    再次去掉最后一个字符串，这个过程会一直重复直到发现一个匹配或者字符串不剩任何字符。简单量词都是贪婪量词。
+
+
+惰性量词：
+
+先看字符串中的第一个字母是不是一个匹配，如果单独着一个字符还不够，就读入下一个字符，组成两个字符的字符串。如果还没有发现匹配，惰性量词继续从字符串中添加字符直到发现一个匹配或者整个字符串都检查过也没有匹配。惰性量词和贪婪量词的工作方式恰好相反。
+
+支配量词：
+只尝试匹配整个字符串。如果整个字符串不能产生匹配，不做进一步尝试。
+
+贪婪量词   惰性量词    支配量词                      描述
+-------------------------------------------------------------------------------------
+  ?             ??             ?+                      可以出现0次或1次，但至多出现1次
+  *             *?            *+                      可以出现任意次，也可以不出现
+  +             +?            ++                      出现1次或多次，但至少出现1次
+  {n}        {n}?           {n}+                   一定出现n次
+  {n,m}    {n,m}?       {n,m}+               至少出现n次，但至多不能超过m次
+  {n,}       {n,}?          {n,}+                 可以出现任意次，但至少出现n次 
+
+=====================================
+函数属性备忘模式
+var myFunc=function(){
+	var cachekey=JSON.stringify(Array.prototype.slice.call(arguments)),
+	result;
+	if(!myFunc.cache[cachekey]){
+		result={};
+		myFunc.cache[cachekey]=result;
+	}
+	return myFunc.cache[cachekey];
+}
+//缓存存储
+myFunc.cache={};
+
+====================================================
+函数的节流
+var throttleV2 = function(fn, delay, mustRunDelay){
+    var timer = null;
+    var t_start;
+    return function(){
+        var context = this, args = arguments, t_curr = +new Date();
+        clearTimeout(timer);
+        if(!t_start){
+            t_start = t_curr;
+        }
+        if(t_curr - t_start >= mustRunDelay){
+            fn.apply(context, args);
+            t_start = t_curr;
+        }
+        else {
+            timer = setTimeout(function(){
+                fn.apply(context, args);
+            }, delay);
+        }
+    };
+ };
+
+
+====================================================
+js 的私有属性
+1.将一个变量声明在一个函数内部就称为了私有属性
+function dog(){
+	var name='dd';
+	this.getName=function(){
+		return name;
+	}
+}
+
+var d=new dog();
+console.log(d.name)  //私有的undefined
+console.log(d.getName) // dd;
+
+=======================================================
+javascript 的异步编程
+javascript是单线程的，意味着javascript是同步执行的，就是一个函数执行完后再执行后面的函数
+javascript的异步编程是通过callback实现的。
+jquery deferred对象
+
+1.deferred对象的好处允许自由添加多个回调函数
+如:$.ajax("test.php")
+.done(function(){console.log('suc')})
+.fail(function(){console.log('执行失败')})
+.done(function(){console.log('第二个回调函数')})
+
+2.可以为多个操作指定回调函数
+$.when($.ajax('test1.php'),$.ajax('test2.php'))
+.done(function(){console.log('执行成功')})
+.fail(function(){console.log('自i想失败')})
+
+
+=====$.ajax()执行完后返回一个deferred对象，所以可以链式调用
+
+如何让普通对象方法返回deferred对象
+var dtd=$.Deferred();
+var wait=function(dtd){
+	var  tasks=function(){
+		console.log('执行完毕')
+	}
+	setTimeout(tasks,5000);
+	return dtd;
+}
+$.when(wait(dtd)).done(function(){}).fail(function(){})
+
+3.deferred.resolve() 将deferred对象的执行状态更改为执行完成
+  deferred.reject()  将deferred对象的执行状态改为失败
+  deferred.promise() 锁定一个deferred对象的状态
+
+  标准的写法：
+  var wait = function(dtd){
+　　　　var dtd = $.Deferred(); //在函数内部，新建一个Deferred对象
+　　　　var tasks = function(){
+　　　　　　alert("执行完毕！");
+　　　　　　dtd.resolve(); // 改变Deferred对象的执行状态
+　　　　};
+
+　　　　setTimeout(tasks,5000);
+　　　　return dtd.promise(); // 返回promise对象
+　　};
+　　$.when(wait())
+　　.done(function(){ alert("哈哈，成功了！"); })
+　　.fail(function(){ alert("出错啦！"); });
+
+=========================================================
+//深度复制
+function cloneObject(obj){
+	if(obj === null){
+		return null;
+	}
+	var o=obj.constructor === Array ? [] : {};
+	for(var i in obj){
+		if(obj.hasOwnProperty(i)){
+		o[i]=typeof obj[i] === 'object' ? cloneObject(obj[i]):obj[i];
+		}
+	}
+	return o;
+}
+
+
+function extendDeep(parent,child){
+	child=child || {};
+	var toStr=Object.prototype.toString,
+		astr='[object Array]';
+	for(var i in parent){
+		if(parent.hasOwnProperty(i)){
+			if(typeof parent[i] === 'object'){
+				child[i]=(toStr.call(parent[i]) === astr) ? [] : {};
+				extendDeep(parent[i],child[i]);
+			}else{
+				child[i]=parent[i];
+			}
+		}
+		return child;
+	}
+
+}
+
+=================================================================
+自定义事件
+function customEvent(){
+	this.handlers={};
+}
+customEvent.propertype={
+	constructor:customEvent;
+	addEvent:function(type,handler){
+		if(typeof this.handlers[type] === 'undefined'){
+			this.handlers[type]=[];
+		}
+		this.handlers[type].push[handler];
+	},
+	fire:function(event){
+	  if(!event.target){
+	  	 event.target=this;
+	  }
+	  if(this.handlers[event.type] instanceof Array){
+	  	 handlers=this.handlers[event.type];
+	  	 for(var i=0 ,len=handlers.length;i<len;i++){
+	  	 	handlers[i](event);
+	  	 }
+	  }
+	},
+	removeEvent:function(type,handler){
+		if(this.handlers[type] instanceof Array){
+		 	handlers=this.handlers[type];
+			for(var i=0 ,len=handlers.length;i<len;i++){
+	  	 	 if(handelers[i] == handler){
+	  	 	 	break;
+	  	 	 }
+	  	 }
+	  	 handlers.splice(i,1);
+		}
+
+	}
+}
+
+
+function printMsg(event){
+	console.log(event.msg);
+}
+
+ var e=new customEvent();
+ e.addEvent('message',printMsg);
+ e.fire({type:'message',msg:'hello customEventDemo'})
