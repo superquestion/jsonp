@@ -335,3 +335,110 @@ function printMsg(event){
  var e=new customEvent();
  e.addEvent('message',printMsg);
  e.fire({type:'message',msg:'hello customEventDemo'})
+ 
+ .bind()
+
+$('a').bind('click', function() { alert("That tickles!") }); 
+这是最简单的绑定方法了。JQuery扫描文档找出所有的$(‘a’)元素，并把alert函数绑定到每个元素的click事件上。
+
+.live()
+
+$('a').live('click', function() { alert("That tickles!") }); 
+JQuery把alert函数绑定到$(document)元素上，并使用’click’和’a’作为参数。任何时候只要有事件冒泡到document节点上，它就查看该事件是否是一个click事件，以及该事件的目标元素与’a’这一CSS选择器是否匹配，如果都是的话，则执行函数。
+
+live方法还可以被绑定到具体的元素(或“context”)而不是document上，像这样：
+
+$('a', $('#container')[0]).live(...); 
+.delegate()
+
+$('#container').delegate('a', 'click', function() { alert("That tickles!") }); 
+JQuery扫描文档查找$(‘#container’)，并使用click事件和’a’这一CSS选择器作为参数把alert函数绑定到$(‘#container’)上。任何时候只要有事件冒泡到$(‘#container’)上，它就查看该事件是否是click事件，以及该事件的目标元素是否与CCS选择器相匹配。如果两种检查的结果都为真的话，它就执行函数。.bind()
+
+
+
+======================================================================================
+获取一组radio被选中项的值  
+
+ var item = $('input[name=items][checked]').val();  
+
+ 获取select被选中项的文本  
+
+ var item = $("select[name=items] option[selected]").text();  
+
+ select下拉框的第二个元素为当前选中值  
+
+ $('#select_id')[1].selectedIndex = 1;  
+
+ radio单选组的第二个元素为当前选中值  
+
+ $('input[name=items]').get(1).checked = true; 
+
+
+ =====================================================================================
+ 如何创建jquery 插件
+$.extend(object) 可以理解为JQuery 添加一个静态方法。
+
+$.fn.extend(object) 可以理解为JQuery实例添加一个方法。
+(function($, window, undefined) {
+	$.fn.PluginName = function(opts) {
+		var defaults = {
+			// 插件自定义选项的默认值
+		};
+
+		// 以用户的自定义选项覆盖默认选项
+		var options = $.extend(defaults, opts || {});
+
+		return this.each(function() { // 让插件支持链式操作
+			// 在这里编写插件功能代码
+		});
+	};
+})(jQuery, window);
+首先，创建一个匿名的自执行函数，形参为 $ 、 window 和 undefined，实参为 jQuery 和 window。
+
+嗯？为什么没有为 undefined 对应地传入一个实参呢？这是一个小技巧，
+考虑到 undefined 这个变量名可能在其它地方的 JavaScript 代码赋过值，
+失去了它真正的意义，所以这里干脆不传入这个参数，以确保它在那个匿名自执行函数中是真正的 undefined。
+
+jQuery 传入后对应为 $，这样可以保证插件内调用的 $ 一定是 jQuery 而非 Prototype 之类的库。
+
+此类插件的调用方式一般为 $(selector).PluginName(); 这种形式。
+
+jQuery.fn.myPlugin = function(options) {
+  // Do your awesome plugin stuff here
+};
+or
+
+jQuery.fn['myPlugin'] = function(options) {
+  // Do your awesome plugin stuff here
+};
+
+
+如：
+(function ($, window, document, undefined) {
+		 	$.fn.greenify = function() {
+		 	     this.css('color','red');
+    			 return this;
+  		 	};
+ 
+  			$.ltrim = function( str ) {
+    			return str.replace(/^\s+/, '');
+  			};
+  			$.rtrim = function( str ) {
+    			return str.replace(/\s+$/, '');
+  			};
+			
+			
+		})(window.jQuery, window, document)
+         $(function(){
+         	 var str="      xx   "
+         console.log(str.length) 
+         console.log($.ltrim(str).length) 
+        $("#main").greenify()
+         	
+         	//$("#main p").siblings().css("background","yellow");
+         })
+
+ 
+
+
+
