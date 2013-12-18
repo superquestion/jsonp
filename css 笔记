@@ -42,7 +42,7 @@ fixed
 * html .fixed-right /* IE6 右侧固定 */ {position:absolute;right:auto;left:expression(eval(document.documentElement.scrollLeft+document.documentElement.clientWidth-this.offsetWidth)-(parseInt(this.currentStyle.marginLeft,10)||0)-(parseInt(this.currentStyle.marginRight,10)||0));}
 * html .fixed-bottom /* IE6 底部固定  */{position:absolute;bottom:auto;top:expression(eval(document.documentElement.scrollTop+document.documentElement.clientHeight-this.offsetHeight-(parseInt(this.currentStyle.marginTop,10)||0)-(parseInt(this.currentStyle.marginBottom,10)||0)));}
 * html .fixed-left /* IE6 左侧固定 */{position:absolute;right:auto;left:expression(eval(document.documentElement.scrollLeft));}
-
+_top:expression(eval(document.documentElement.scrollTop+document.documentElement.clientHeight-this.offsetHeight-77));
 line-height:2
   行高等于子元素字体大小*2
 line-height:200%
@@ -51,3 +51,4 @@ line-height:200%
 选择器：
   p#lead-in ====> p[id="lead-in"]	
   h2+p  ---->h2 后的段落p
+ 
