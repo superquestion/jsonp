@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>form</title>
+		<meta name="description" content="" />
+		<meta name="author" content="yp" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="shortcut icon" href="/favicon.ico" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+		<link rel="stylesheet" href="css/base.css"/>
+		<style>
+            .drag {
+                width: 1000px;
+                height: 720px;
+                position: absolute;
+                background: #99CCFF;
+                border: 1px solid #000;
+            }
+            .title {
+                width: 100%;
+                height: 72px;
+                background: red;
+                margin-top: 648px;
+            }
+		</style>
+		<script src="js/jquery-1.7.2.js"></script>
+		<script>
+			function drag() {
+				var isMove = false, handler = $('.title'), _this = $('.drag'), dx, dy;
+				$('.drag').mousemove(function(event) {
+					if(isMove) {
+						var eX = event.pageX, eY = event.pageY;
+						_this.css({
+							'left' : eX - dx,
+							'top' : eY - dy
+						});
+					}
+				})
+				$('.drag').mouseup(function() {
+					isMove = false;
+				});
+				handler.mousedown(function(event) {
+					if($(event.target).is(handler)) {
+						isMove = true;
+						$(this).css('cursor', 'move');
+						dx = event.pageX - parseInt(_this.css("left"));
+						dy = event.pageY - parseInt(_this.css("top"));
+					}
+				});
+			};
+			$(document).ready(function() {
+				var w = $(window).width();
+				var h = $(window).height();
+				var top = (parseInt(h) - 720) / 2;
+				var left = (parseInt(w) - 1000) / 2;
+				$('.drag').css({
+					'top' : top + 'px',
+					'left' : left + 'px'
+				});
+				drag();
+			});
+		</script>
+	</head>
+	<body>
+		<div class="drag">
+			<div class="title">
+			</div>
+		</div>
+	</body>
+</html>
+
