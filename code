@@ -1,0 +1,183 @@
+js 的继承
+
+prototypal inheriatance
+
+function object(o){
+	function F(){
+
+	};
+    F.prototype = o;
+    return new F();
+}
+
+var parent  = {
+	name: 'test'
+}
+var child = object(parent);
+console.log(child.name); //test
+
+function Person(){
+	this.name = 'test';
+}
+Person.prototype.getName = function(){
+	return this.name;
+}
+var p = new Person();
+var kid = object(p);
+console.log(kid.getName); //test
+console.log(kid.name); // test
+
+
+var kud = object(Person.prototype);
+ console.log(typeof kud.getName); // "function", because it was in the prototype
+ console.log(typeof kud.name); // "undefined", because only the prototype was inherited
+
+
+
+
+  /* Title: Inheritance by Copying Properties
+     Description: an object gets functionality from another object, simply by copying it
+  */
+
+   /* shallow copy */
+   function extend(parent, child) {
+        var i;
+        child = child || {};
+        for (i in parent) {
+            if (parent.hasOwnProperty(i)) {
+                child[i] = parent[i];
+            }
+        }
+        return child;
+    }
+
+    var dad = {name:"Adam"};
+    var kid = extend(dad);
+    console.log(kid.name); // "Adam"
+
+    var dad = {
+         counts:[1, 2, 3],
+         reads:{paper:true}
+        };
+    var kid = extend(dad);
+    kid.counts.push(4);
+    console.log(dad.counts.toString()); // "1,2,3,4"
+    console.log(dad.reads === kid.reads); // true
+
+
+    /* deep copy */
+    function extendDeep(parent, child) {
+        var i,
+            toStr = Object.prototype.toString,
+            astr = "[object Array]",
+            child = child || {};
+        for (i in parent) {
+            if (parent.hasOwnProperty(i)) {
+                if (typeof parent[i] === 'object') {
+                    child[i] = (toStr.call(parent[i]) === astr) ? [] : {};
+                    extendDeep(parent[i], child[i]);
+                }else{
+                    child[i] = parent[i];
+                    }
+                }
+            }
+            return child;
+        }
+
+        var dad = {
+                counts:[1, 2, 3],
+                reads:{paper:true}
+        };
+        var kid = extendDeep(dad);
+
+        kid.counts.push(4);
+        console.log(kid.counts.toString()); // "1,2,3,4"
+        console.log(dad.counts.toString()); // "1,2,3"
+
+        console.log(dad.reads === kid.reads); // false
+        kid.reads.paper = false;
+
+
+  bind      
+  if (typeof Function.prototype.bind === 'undefined') {
+        Function.prototype.bind = function (thisArg) {
+                var fn = this,
+                                slice = Array.prototype.slice,
+                                args = slice.call(arguments, 1);
+                return function () {
+                        return fn.apply(thisArg, args.concat(slice.call(arguments)));
+                };
+        };
+}
+
+var twosay2 = one.say.bind(two);
+console.log(twosay2('Bonjour')); // "Bonjour, another object"
+
+var twosay3 = one.say.bind(two, 'Enchanté');
+console.log(twosay3()); // "Enchanté, another object"
+
+
+
+function inherit(C, P) {
+        C.prototype = P.prototype;
+}
+
+// the parent constructor
+function Parent(name) {
+        this.name = name || 'Adam';
+}
+
+// adding functionality to the prototype
+Parent.prototype.say = function () {
+        return this.name;
+};
+
+// child constructor
+function Child(name) {
+}
+
+inherit(Child, Parent);
+
+var kid = new Child('Patrick');
+console.log(kid.name); // undefined
+console.log(typeof kid.say); // function
+kid.name = 'Patrick';
+console.log(kid.say()); // Patrick
+console.dir(kid);
+
+
+
+/* in closure */
+var inherit = (function () {
+        var F = function () {
+        };
+        return function (C, P) {
+                F.prototype = P.prototype;
+                C.prototype = new F();
+                C.uber = P.prototype;
+                C.prototype.constructor = C;
+        }
+}());
+
+function Parent(name) {
+        this.name = name || 'Adam';
+}
+
+// adding functionality to the prototype
+Parent.prototype.say = function () {
+        return this.name;
+};
+
+// child constructor
+function Child(name) {
+}
+
+inherit(Child, Parent);
+
+var kid = new Child();
+console.log(kid.name); // undefined
+console.log(typeof kid.say); // function
+kid.name = 'Patrick';
+console.log(kid.say()); // Patrick
+console.log(kid.constructor.name); // Child
+console.log(kid.constructor === Parent); // false
