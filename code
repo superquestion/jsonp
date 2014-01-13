@@ -33,12 +33,6 @@ var kud = object(Person.prototype);
  console.log(typeof kud.name); // "undefined", because only the prototype was inherited
 
 
-
-
-  /* Title: Inheritance by Copying Properties
-     Description: an object gets functionality from another object, simply by copying it
-  */
-
    /* shallow copy */
    function extend(parent, child) {
         var i;
@@ -122,17 +116,17 @@ function inherit(C, P) {
         C.prototype = P.prototype;
 }
 
-// the parent constructor
+
 function Parent(name) {
         this.name = name || 'Adam';
 }
 
-// adding functionality to the prototype
+
 Parent.prototype.say = function () {
         return this.name;
 };
 
-// child constructor
+
 function Child(name) {
 }
 
@@ -147,7 +141,6 @@ console.dir(kid);
 
 
 
-/* in closure */
 var inherit = (function () {
         var F = function () {
         };
@@ -163,12 +156,12 @@ function Parent(name) {
         this.name = name || 'Adam';
 }
 
-// adding functionality to the prototype
+
 Parent.prototype.say = function () {
         return this.name;
 };
 
-// child constructor
+
 function Child(name) {
 }
 
