@@ -15,10 +15,10 @@ Events = ->
   remove = (key) ->
     obj[key]?.length = 0
 
-  tigger = () ->
-    key = Array.property.shift.call(arguments)
+  trigger = () ->
+    key = Array.prototype.shift.call(arguments)
     stack = obj[key] ?= []
     for fn in stack
-      return false if fn.call.apply(_this, arguments) is false
+      return false if fn.apply(_this, arguments) is false
 
-  {listen, one, remove, tigger}
+  {listen, one, remove, trigger}
