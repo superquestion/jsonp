@@ -174,3 +174,15 @@ kid.name = 'Patrick';
 console.log(kid.say()); // Patrick
 console.log(kid.constructor.name); // Child
 console.log(kid.constructor === Parent); // false
+
+
+<!--[if IE 7]>
+    <script>
+        !function(){
+            var form = location.search.match(new RegExp("(?:\\?|&)from=(.*?)(?=&|$)"))[1];
+            if( form == "baidu"){
+                location.href = 'ie6.html' + location.search + location.hash;
+            }
+        }()
+    </script>
+    <![endif]-->
