@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+     <style>
+         .bg{
+             position: absolute;
+             z-index: 2;
+             top: 0;
+             left: 0;
+             bottom: 0;
+             right: 0;
+             width: 100%;
+             height: 100%;
+             overflow: hidden;
+         }
+     </style>
+</head>
+<body>
+  <div class="bg">
+       <img src="http://www.dongting.com/styles/images/bg/large/014.jpg">
+  </div>
+</body>
+<script src="js/jquery.js"></script>
+
+<script>
+    $(function(){
+        $(window).on("resize",function(){
+           cover();
+        })
+        cover();
+
+        function cover(){
+            //默认margin-left:0
+            var ml = 0;
+            //默认height
+            var dh = "auto"
+            //bg的大小等于window 这里w是指当前窗口的width
+            var w = $(".bg").width();
+            //bg的大小等于window 这里w是指当前窗口的height
+            var h = $(".bg").height();
+            //margin-top
+            var mt = -(w / 1680 * 1050 - h) /2;
+            //margin-left
+            var mf= -(h / 1050 * 1680 - w) /2;
+            //
+            var m = 1680/ w * h;
+            var mh = h/1050 * w;
+            //mt = mt < 0 ? mt : 0;
+            //margin -top < 0
+            if(mt > 0){
+                mt = 0;
+                ml = mf;
+                dh = h;
+                w = "auto"
+            }
+
+            $(".bg img").css({width:w,marginTop:mt,height:dh,marginLeft:ml});
+        }
+
+    })
+</script>
+
+</html>
